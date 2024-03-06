@@ -59,6 +59,7 @@ public class SpringSecurityConfig {
                         auth.requestMatchers("/user-management/auth/**").permitAll()
                                 .requestMatchers("/user-management/admin/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers("/user-management/user/**").hasAnyAuthority("ROLE_USER")
+
                                 // công khai với đường dẫn này
                                 .anyRequest().authenticated() // các đường dẫn khác yêu cầu xác thực
                 );

@@ -12,10 +12,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignIn {
-//    @NotBlank(message = "Email không được bỏ trống")
-//    @Pattern(regexp = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Email không đúng định dạng(a@gmail.com)")
+    @NotBlank(message = "Email không được bỏ trống")
+    @Pattern(regexp = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Email không đúng định dạng(a@gmail.com)")
     private String email;
-//    @NotBlank(message = "Mật khẩu không đươc để trống")
-//    @Pattern(regexp = ".{6,}")
+    @NotBlank(message = "Mật khẩu không đươc để trống")
+    @Pattern(regexp = ".{6,}")
     private String password;
 }
