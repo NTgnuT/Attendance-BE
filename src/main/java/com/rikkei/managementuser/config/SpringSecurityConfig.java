@@ -1,17 +1,22 @@
 package com.rikkei.managementuser.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rikkei.managementuser.model.dto.ErrorResponse;
 import com.rikkei.managementuser.security.jwt.JwtAuthenticationEntryPoint;
 import com.rikkei.managementuser.security.jwt.JwtAuthenticationFilter;
 import com.rikkei.managementuser.security.principal.UserDetailServiceImpl;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -31,11 +36,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 @AllArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SpringSecurityConfig {
+
     @Bean
     public JwtAuthenticationEntryPoint jwtEntryPoint() {
         return new JwtAuthenticationEntryPoint();
     }
+
     @Autowired
     public JwtAuthenticationFilter JwtAuthenticationFilter;
     @Autowired
@@ -56,7 +64,7 @@ public class SpringSecurityConfig {
         return auth.getAuthenticationManager();
     }
 
-//    @Bean
+    //    @Bean
 //    public AccessDeniedHandler accessDeniedHandler() {
 //        return (request, response, ex) -> {
 //            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -71,17 +79,21 @@ public class SpringSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtEntryPoint()))
-//                .exceptionHandling(exception -> exception.accessDeniedHandler())// xử lí lỗi liên quan đến xác thực
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ko lưu trạng thái
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/user-management/auth/**").permitAll()
-                                .requestMatchers("/user-management/admin/**").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers("/user-management/user/**").hasAnyAuthority("ROLE_USER")
-                                .requestMatchers(HttpMethod.DELETE, "/user-management/admin/courses/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/user-management/api/**").permitAll()
+//                                .requestMatchers("/user-management/api/**").hasAnyAuthority("ROLE_USER")
+//                                .requestMatchers(HttpMethod.DELETE, "/user-management/api/courses/**").hasAnyAuthority("ROLE_ADMIN")
 
                                 // công khai với đường dẫn này
                                 .anyRequest().authenticated() // các đường dẫn khác yêu cầu xác thực
-                );
+                )
+//                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> {
+//                    throw  accessDeniedException;
+//                }));
+                ;
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

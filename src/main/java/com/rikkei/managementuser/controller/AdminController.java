@@ -9,13 +9,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Security;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-management/admin")
+@RequestMapping("/user-management/api")
 @RequiredArgsConstructor
 public class AdminController {
     private final ICourseService courseService;
@@ -31,7 +33,7 @@ public class AdminController {
         courseService.edit(courseRequest, id);
         return ResponseEntity.status(200).body(new CreateCourseDTO(true, "Thông tin khóa học đã được cập nhật thành công"));
     }
-
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/courses/{id}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long id) throws NoPermissionToDelete {
         courseService.deleteCourse(id);
