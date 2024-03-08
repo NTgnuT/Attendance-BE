@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+
 @RequestMapping("/user-management/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -32,7 +33,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<User> singUp(@RequestBody User user){
+    public ResponseEntity<User> singUp(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return ResponseEntity.ok(user);
@@ -40,11 +41,11 @@ public class AuthenticationController {
     }
 
     @GetMapping("/log-out")
-    public  ResponseEntity<?> logOut(HttpServletRequest request , HttpServletResponse response){
+    public ResponseEntity<?> logOut(HttpServletRequest request, HttpServletResponse response) {
         CookieClearingLogoutHandler cookieClearingLogoutHandler = new CookieClearingLogoutHandler(AbstractRememberMeServices.SPRING_SECURITY_REMEMBER_ME_COOKIE_KEY);
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        cookieClearingLogoutHandler.logout(request,response,null);
-        securityContextLogoutHandler.logout(request,response,null);
+        cookieClearingLogoutHandler.logout(request, response, null);
+        securityContextLogoutHandler.logout(request, response, null);
         return ResponseEntity.status(204).body(null);
 
     }

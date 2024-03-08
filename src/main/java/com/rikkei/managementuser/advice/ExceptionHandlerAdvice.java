@@ -3,6 +3,9 @@ package com.rikkei.managementuser.advice;
 import com.rikkei.managementuser.exception.NoPermissionToDelete;
 import com.rikkei.managementuser.exception.SignInFailException;
 import com.rikkei.managementuser.model.dto.ErrorResponse;
+import com.rikkei.managementuser.validator.ClassUnique;
+import com.rikkei.managementuser.validator.ClassValidator;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.*;
@@ -34,7 +38,7 @@ public class ExceptionHandlerAdvice {
         for (FieldError error : result.getFieldErrors()) {
             errorsDetails.put(error.getField(), error.getDefaultMessage());
         }
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "ValidationFailed", errorsDetails);
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorsDetails);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
@@ -42,28 +46,45 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(SignInFailException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ErrorResponse> handleSignInFailException(SignInFailException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(),null );
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), null);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(NoPermissionToDelete.class)
-    public ResponseEntity<ErrorResponse> handleNoPermissionToDelete(NoPermissionToDelete ex){
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN, "Bạn không có quyền xoá khóa học này",null);
+    public ResponseEntity<ErrorResponse> handleNoPermissionToDelete(NoPermissionToDelete ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN, "Bạn không có quyền xoá khóa học này", null);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex){
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(),null);
+    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex){
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, "alo",null);
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
+//    @ExceptionHandler(ClassValidator.class)
+//    public ResponseEntity<ErrorResponse> handleClassUniqueException(ClassValidator classValidator){
+//
+//    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Không thể truy cập vào cơ sở dự liệu", null);
+        return ResponseEntity.status(500).body(errorResponse);
+    }
+
+    @ExceptionHandler(HttpServerErrorException.InternalServerError.class)
+    public ResponseEntity<ErrorResponse> handleInternalServerError(HttpServerErrorException.InternalServerError ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Lỗi sever", null);
+        return ResponseEntity.status(500).body(errorResponse);
+
+    }
 
 
 }

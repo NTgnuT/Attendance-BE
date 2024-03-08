@@ -1,6 +1,7 @@
 package com.rikkei.managementuser.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rikkei.managementuser.exception.CustomAccessDeniedHandler;
 import com.rikkei.managementuser.model.dto.ErrorResponse;
 import com.rikkei.managementuser.security.jwt.JwtAuthenticationEntryPoint;
 import com.rikkei.managementuser.security.jwt.JwtAuthenticationFilter;
@@ -50,6 +51,8 @@ public class SpringSecurityConfig {
     private UserDetailServiceImpl userDetailService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -64,7 +67,7 @@ public class SpringSecurityConfig {
         return auth.getAuthenticationManager();
     }
 
-    //    @Bean
+//        @Bean
 //    public AccessDeniedHandler accessDeniedHandler() {
 //        return (request, response, ex) -> {
 //            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -78,16 +81,18 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtEntryPoint()))
+                .exceptionHandling(ex->ex.accessDeniedHandler(customAccessDeniedHandler))
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ko lưu trạng thái
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/user-management/auth/**").permitAll()
                                 .requestMatchers("/user-management/api/**").permitAll()
-//                                .requestMatchers("/user-management/api/**").hasAnyAuthority("ROLE_USER")
+//                                .requestMatchers("/user-management/api/classes/**").permitAll()
+//                                .requestMatchers(HttpMethod.DELETE,"/user-management/api/classes").hasAnyAuthority("ROLE_ADMIN")
 //                                .requestMatchers(HttpMethod.DELETE, "/user-management/api/courses/**").hasAnyAuthority("ROLE_ADMIN")
 
-                                // công khai với đường dẫn này
                                 .anyRequest().authenticated() // các đường dẫn khác yêu cầu xác thực
                 )
 //                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> {

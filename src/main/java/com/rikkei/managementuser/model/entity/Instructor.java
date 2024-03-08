@@ -28,8 +28,6 @@ public class Instructor {
     @Column(name = "PhoneNumber")
     private String phoneNumber;
 
-    // Constructors, getters and setters
-
     @ManyToMany
     @JoinTable(
             name = "CoursesInstructors",
@@ -37,6 +35,10 @@ public class Instructor {
             inverseJoinColumns = @JoinColumn(name = "CourseID")
     )
     private Set<Courses> taughtCourses;
+
+    @OneToMany(mappedBy = "instructor")
+    private Set<Class> classes;
+
 
 
 }

@@ -45,9 +45,6 @@ public class Courses {
     @Enumerated(EnumType.STRING)
     private CourseStatus status;
 
-    // Constructors, getters and setters
-
-    // Trong class Courses
     @ManyToMany(mappedBy = "taughtCourses")
     private Set<Instructor> instructors;
 
@@ -56,6 +53,9 @@ public class Courses {
 
     @OneToMany(mappedBy = "course")
     private Set<Enrollment> enrollments;
+
+    @OneToMany(mappedBy = "courses")
+    private Set<Class> classes;
 }
 
 

@@ -23,7 +23,6 @@ public class User {
     private String password;
     private String email;
     @ManyToMany(fetch = FetchType.EAGER)
-
     @JoinTable(
             name = "User_Role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -31,6 +30,6 @@ public class User {
 
     )
     private List<Role> roles;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private Set<Enrollment> enrollments;
 }

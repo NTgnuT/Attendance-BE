@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCourseDTO implements Serializable {
+public class ResponseAPI implements Serializable {
     //    private transient String name = "HaHa";
     private Boolean success;
     private String message;
