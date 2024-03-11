@@ -1,6 +1,8 @@
 package com.rikkei.managementuser.advice;
 
+import com.rikkei.managementuser.exception.EmailUniqueException;
 import com.rikkei.managementuser.exception.NoPermissionToDelete;
+import com.rikkei.managementuser.exception.PhoneUniqueException;
 import com.rikkei.managementuser.exception.SignInFailException;
 import com.rikkei.managementuser.model.dto.ErrorResponse;
 import com.rikkei.managementuser.validator.ClassUnique;
@@ -85,6 +87,19 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.status(500).body(errorResponse);
 
     }
+
+    @ExceptionHandler(PhoneUniqueException.class)
+    public String PhoneUniqueException(PhoneUniqueException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(EmailUniqueException.class)
+    public String EmailUniqueException(EmailUniqueException e) {
+        return e.getMessage();
+    }
+
+
+
 
 
 }

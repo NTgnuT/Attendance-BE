@@ -88,7 +88,7 @@ public class SpringSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ko lưu trạng thái
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/user-management/auth/**").permitAll()
-                                .requestMatchers("/user-management/api/**").permitAll()
+                                .requestMatchers("/user-management/api n/**").permitAll()
 //                                .requestMatchers("/user-management/api/classes/**").permitAll()
 //                                .requestMatchers(HttpMethod.DELETE,"/user-management/api/classes").hasAnyAuthority("ROLE_ADMIN")
 //                                .requestMatchers(HttpMethod.DELETE, "/user-management/api/courses/**").hasAnyAuthority("ROLE_ADMIN")

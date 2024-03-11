@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 
 @RequestMapping("/user-management/auth")
+@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
@@ -37,7 +38,6 @@ public class AuthenticationController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return ResponseEntity.ok(user);
-
     }
 
     @GetMapping("/log-out")

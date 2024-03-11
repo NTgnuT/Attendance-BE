@@ -10,11 +10,15 @@ import java.util.Optional;
 
 public interface IClassService {
     void save(ClassCreateDTO classCreateDTO);
+
     ClassResponse findById(Long classId);
 
     List<ClassResponse> findAllClass();
+
     void editClass(ClassCreateDTO classCreateDTO,Long id);
+
     void deleteClass(Long id) throws NoPermissionToDelete;
+
     List<ClassResponse> search(String keyword);
 
 

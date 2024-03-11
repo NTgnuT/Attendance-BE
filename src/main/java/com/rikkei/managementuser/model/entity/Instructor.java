@@ -1,11 +1,14 @@
 package com.rikkei.managementuser.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -13,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Instructors")
+@Builder
 public class Instructor {
 
     @Id
@@ -25,8 +29,14 @@ public class Instructor {
     @Column(name = "Email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "PhoneNumber")
+    @Column(name = "PhoneNumber",unique = true)
     private String phoneNumber;
+
+    @Column(name = "Address")
+    private String address;
+
+    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
+    private Date dob;
 
     @ManyToMany
     @JoinTable(
@@ -38,7 +48,6 @@ public class Instructor {
 
     @OneToMany(mappedBy = "instructor")
     private Set<Class> classes;
-
 
 
 }
