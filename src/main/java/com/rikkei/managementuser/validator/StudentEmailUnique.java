@@ -8,11 +8,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = PhoneNumberValidator.class)
+@Constraint(validatedBy = StudentEmailValidator.class)
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-
-public @interface PhoneNumberUnique {
+public @interface StudentEmailUnique {
     String message();
 
     Class<?>[] groups() default {};

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EmailUnique {
-    String message() default "Email đã tồn tại";
+        String message() ;
 
     Class<?>[] groups() default {};
 

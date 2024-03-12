@@ -1,9 +1,6 @@
 package com.rikkei.managementuser.advice;
 
-import com.rikkei.managementuser.exception.EmailUniqueException;
-import com.rikkei.managementuser.exception.NoPermissionToDelete;
-import com.rikkei.managementuser.exception.PhoneUniqueException;
-import com.rikkei.managementuser.exception.SignInFailException;
+import com.rikkei.managementuser.exception.*;
 import com.rikkei.managementuser.model.dto.ErrorResponse;
 import com.rikkei.managementuser.validator.ClassUnique;
 import com.rikkei.managementuser.validator.ClassValidator;
@@ -44,6 +41,17 @@ public class ExceptionHandlerAdvice {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+    @ExceptionHandler(EmailAndPhoneException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleEmailAndPhoneException(EmailAndPhoneException ex) {
+        Map<String,String> errorDetails = new HashMap<>();
+        errorDetails.put("Email","Email đã tồn tại");
+        errorDetails.put("phone","Số điện thoại đã tồn tại");
+        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST,"Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
+    }
+
+
 
     @ExceptionHandler(SignInFailException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -89,13 +97,18 @@ public class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(PhoneUniqueException.class)
-    public String PhoneUniqueException(PhoneUniqueException e) {
-        return e.getMessage();
+    public ResponseEntity<ErrorResponse> PhoneUniqueException(PhoneUniqueException e) {
+        Map<String,String> errorDetails = new HashMap<>();
+        errorDetails.put("phone","Số điện thoại đã tồn tại");
+        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST,"Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
     }
 
     @ExceptionHandler(EmailUniqueException.class)
-    public String EmailUniqueException(EmailUniqueException e) {
-        return e.getMessage();
+    public ResponseEntity<ErrorResponse> EmailUniqueException(EmailUniqueException e) {
+        Map<String,String> errorDetails = new HashMap<>();
+        errorDetails.put("Email","Email đã tồn tại");
+        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST,"Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
+
     }
 
 

@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClassCreateDTO {
 
-    @NotBlank
+    @NotBlank(message = "Không được bỏ trống")
     @ClassUnique(message = "Lớp học này đã tồn tại")
     private String name;
 
     @Min(value = 0, message = "số học viên không được âm ")
     private int maxStudent;
 
-    @NotBlank
+    @NotBlank(message = "Không được bỏ trống")
     private String instructor;
 
     private Long coursesId;
