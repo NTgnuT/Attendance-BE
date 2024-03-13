@@ -1,6 +1,8 @@
 package com.rikkei.managementuser.controller;
 
+import com.rikkei.managementuser.exception.CourseExistException;
 import com.rikkei.managementuser.exception.NoPermissionToDelete;
+import com.rikkei.managementuser.model.dto.request.CourseEditRequest;
 import com.rikkei.managementuser.model.dto.request.CourseRequest;
 import com.rikkei.managementuser.model.dto.response.CourseResponse;
 import com.rikkei.managementuser.model.dto.response.ResponseAPI;
@@ -25,8 +27,8 @@ public class AdminController {
     }
 
     @PutMapping("/courses/{id}")
-    public ResponseEntity<?> editCourse(@Valid @RequestBody CourseRequest courseRequest, @PathVariable Long id) {
-        courseService.edit(courseRequest, id);
+    public ResponseEntity<?> editCourse(@Valid @RequestBody CourseEditRequest courseEditRequestRequest, @PathVariable Long id) throws CourseExistException {
+        courseService.edit(courseEditRequestRequest, id);
         return ResponseEntity.status(200).body(new ResponseAPI(true, "Thông tin khóa học đã được cập nhật thành công"));
     }
 

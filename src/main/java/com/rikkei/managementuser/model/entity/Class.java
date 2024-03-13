@@ -1,11 +1,14 @@
 package com.rikkei.managementuser.model.entity;
 
-import com.rikkei.managementuser.validator.ClassUnique;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -24,12 +27,24 @@ public class Class {
     private int maxStudent;
 
     @ManyToOne
-    @JoinColumn(name = "instructorName")
-    private Instructor instructor;
-
-    @ManyToOne
     @JoinColumn(name = "CourseId")
     private Courses courses;
+
+    @Column(name = "Status")
+    private int status;
+
+    @Column(name = "StartTime")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date startTime;
+
+    @OneToMany(mappedBy = "aClass")
+    private Set<Student> students;
+
+
+//    @ManyToOne
+//    @JoinColumn(name = "instructorName")
+//    private Teacher teacher;
 
 
 }

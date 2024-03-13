@@ -25,11 +25,13 @@ public class CourseResponse {
     @NotBlank
     private String description;
 
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private int courseTime;
 
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+//    @Temporal(TemporalType.DATE)
+//    private Date startDate;
+//
+//    @Temporal(TemporalType.DATE)
+//    private Date endDate;
 
 
 }

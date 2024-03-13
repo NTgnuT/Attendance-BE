@@ -1,11 +1,6 @@
 package com.rikkei.managementuser.model.entity;
 
-import com.rikkei.managementuser.model.entity.CourseSession;
-import com.rikkei.managementuser.model.entity.CourseStatus;
-import com.rikkei.managementuser.model.entity.Enrollment;
-import com.rikkei.managementuser.model.entity.Instructor;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,35 +22,44 @@ public class Courses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
 
-    @Column(name = "Title", nullable = false)
+    @Column(name = "Title", nullable = false , unique = true)
     private String title;
 
     @Column(name = "Description")
     private String description;
 
-    @Column(name = "StartDate", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
-
-    @Column(name = "EndDate")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
-
-    @Column(name = "Status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CourseStatus status;
-
-    @ManyToMany(mappedBy = "taughtCourses")
-    private Set<Instructor> instructors;
-
-    @OneToMany(mappedBy = "course")
-    private Set<CourseSession> courseSessions;
-
-    @OneToMany(mappedBy = "course")
-    private Set<Enrollment> enrollments;
+    @Column(name = "CourseTime")
+    private int courseTime;
 
     @OneToMany(mappedBy = "courses")
     private Set<Class> classes;
+
+    @OneToMany(mappedBy = "course")
+    private Set<ModuleCourse> moduleCourses;
+
+
+//    @Column(name = "StartDate", nullable = false)
+//    @Temporal(TemporalType.DATE)
+//    private Date startDate;
+//
+//    @Column(name = "EndDate")
+//    @Temporal(TemporalType.DATE)
+//    private Date endDate;
+
+//    @Column(name = "Status", nullable = false)
+//    @Enumerated(EnumType.STRING)
+//    private CourseStatus status;
+
+//    @ManyToMany(mappedBy = "taughtCourses")
+//    private Set<Teacher> instructors;
+
+//    @OneToMany(mappedBy = "course")
+//    private Set<CourseSession> courseSessions;
+
+//    @OneToMany(mappedBy = "course")
+//    private Set<Enrollment> enrollments;
+
+
 }
 
 

@@ -6,32 +6,34 @@ import com.rikkei.managementuser.model.dto.response.ClassResponse;
 import com.rikkei.managementuser.model.entity.Class;
 import com.rikkei.managementuser.repository.IClassRepository;
 import com.rikkei.managementuser.repository.ICourseRepository;
-import com.rikkei.managementuser.repository.IInstructorRepository;
+import com.rikkei.managementuser.repository.ITeacherRepository;
 import com.rikkei.managementuser.service.IClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ClassService implements IClassService {
     private final IClassRepository classRepository;
-    private final IInstructorRepository instructorRepository;
+    private final ITeacherRepository instructorRepository;
     private final ICourseRepository courseRepository;
 
 
     @Override
     public void save(ClassCreateDTO c) {
         Class aClass = Class.builder()
-                .instructor(instructorRepository.findByName(c.getInstructor()).orElseThrow(() -> new NoSuchElementException("Không tồn tại giảng viên này!")))
+
                 .courses(courseRepository.findById(c.getCoursesId()).orElseThrow(() -> new NoSuchElementException("Không tồn tại khóa học này ")))
                 .maxStudent(c.getMaxStudent())
                 .name(c.getName())
+                .startTime(new Date())
+                .status(1)
                 .build();
         classRepository.save(aClass);
     }
@@ -43,7 +45,7 @@ public class ClassService implements IClassService {
                 .id(aClass.getId())
                 .maxStudent(aClass.getMaxStudent())
                 .courses(aClass.getCourses().getCourseId())
-                .instructorName(aClass.getInstructor().getName())
+                .startTime(aClass.getStartTime())
                 .name(aClass.getName())
                 .build();
     }
@@ -54,7 +56,7 @@ public class ClassService implements IClassService {
                 .id(a.getId())
                 .name(a.getName())
                 .courses(a.getCourses().getCourseId())
-                .instructorName(a.getInstructor().getName())
+                .startTime(a.getStartTime())
                 .maxStudent(a.getMaxStudent())
                 .build()).collect(Collectors.toList());
     }
@@ -64,7 +66,8 @@ public class ClassService implements IClassService {
         Class aClass = classRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Không tồn tại lớp học này "));
         aClass.setName(a.getName());
         aClass.setCourses(courseRepository.findById(a.getCoursesId()).orElseThrow(() -> new NoSuchElementException("Không tồn tại khóa học này ")));
-        aClass.setInstructor(instructorRepository.findByName(a.getInstructor()).orElseThrow(() -> new NoSuchElementException("Không tồn tại giảng viên này !")));
+        aClass.setStartTime(a.getStartTime());
+        aClass.setStatus(a.getStatus());
         aClass.setMaxStudent(a.getMaxStudent());
         classRepository.save(aClass);
 
@@ -83,15 +86,14 @@ public class ClassService implements IClassService {
 
     @Override
     public List<ClassResponse> search(String keyword) {
-        List<ClassResponse> list = classRepository.findAllByNameContainingOrInstructor_NameContaining(keyword,keyword)
+        return classRepository.findAllByNameContaining(keyword)
                 .stream().map(a -> ClassResponse.builder()
                         .id(a.getId())
                         .name(a.getName())
                         .courses(a.getCourses().getCourseId())
                         .maxStudent(a.getMaxStudent())
-                        .instructorName(a.getInstructor().getName())
+                        .startTime(a.getStartTime())
                         .build()).collect(Collectors.toList());
-       return list;
     }
 
 

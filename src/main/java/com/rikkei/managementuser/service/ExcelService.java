@@ -22,11 +22,11 @@ public class ExcelService {
 
     public void importToDatabase(MultipartFile file) {
         try (InputStream inputStream = file.getInputStream();
-             Workbook workbook = new XSSFWorkbook(inputStream)) {
+             Workbook workbook = new XSSFWorkbook(inputStream))
+        {
             Sheet sheet = workbook.getSheetAt(0);
 
             Iterator<Row> iterator = sheet.iterator();
-            // Bỏ qua header
             if (iterator.hasNext()) {
                 iterator.next();
             }
@@ -39,12 +39,10 @@ public class ExcelService {
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            // Xử lý ngoại lệ một cách thích hợp ở đây, ví dụ: ghi log
         }
     }
 
     private Student createStudentFromRow(Row row) throws ParseException {
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
         Student student = new Student();
         student.setName(row.getCell(0).getStringCellValue());
@@ -63,7 +61,6 @@ public class ExcelService {
         student.setAddress(row.getCell(2).getStringCellValue());
         student.setEmail(row.getCell(3).getStringCellValue());
 //        Cell birthdateCell = row.getCell(4);
-//
 //       Date test1= birthdateCell.getDateCellValue();
         student.setDob(row.getCell(4).getDateCellValue());
 //        if(birthdateCell != null && DateUtil.isCellDateFormatted(birthdateCell)) {

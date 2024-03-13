@@ -1,6 +1,8 @@
 package com.rikkei.managementuser.service.serviceImpl;
 
+import com.rikkei.managementuser.exception.CourseExistException;
 import com.rikkei.managementuser.exception.NoPermissionToDelete;
+import com.rikkei.managementuser.model.dto.request.CourseEditRequest;
 import com.rikkei.managementuser.model.dto.request.CourseRequest;
 import com.rikkei.managementuser.model.dto.response.CourseResponse;
 import com.rikkei.managementuser.model.entity.CourseStatus;
@@ -28,29 +30,36 @@ public class CourseService implements ICourseService {
     public CourseResponse save(CourseRequest c) {
         Courses courses = Courses.builder()
                 .description(c.getDescription())
-                .startDate(c.getStartDate())
-                .endDate(c.getEndDate())
                 .title(c.getTitle())
-                .status(CourseStatus.OPEN_FOR_REGISTRATION)
+                .courseTime(c.getCourseTime())
+//                .startDate(c.getStartDate())
+//                .endDate(c.getEndDate())
+//                .status(CourseStatus.OPEN_FOR_REGISTRATION)
                 .build();
         courseRepository.save(courses);
         return CourseResponse.builder()
                 .id(courses.getCourseId())
                 .description(courses.getDescription())
-                .startDate(courses.getStartDate())
-                .endDate(courses.getEndDate())
                 .title(courses.getTitle())
+                .courseTime(courses.getCourseTime())
+//                .startDate(courses.getStartDate())
+//                .endDate(courses.getEndDate())
                 .build();
     }
 
     //chỉnh sửa khóa học
     @Override
-    public void edit(CourseRequest CR, Long id) {
+    public void edit(CourseEditRequest CR, Long id) throws CourseExistException {
         Courses c = courseRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm đươc khóa học với id cung cấp"));
+        boolean isExist = courseRepository.existsByTitle(CR.getTitle()) && !c.getTitle().equals(CR.getTitle());
+        if(isExist){
+            throw new CourseExistException("Tên khóa học đã tồn tại");
+        }
         c.setDescription(CR.getDescription());
-        c.setEndDate(CR.getEndDate());
-        c.setStartDate(CR.getStartDate());
+        c.setCourseTime(CR.getCourseTime());
         c.setTitle(CR.getTitle());
+//        c.setEndDate(CR.getEndDate());
+//        c.setStartDate(CR.getStartDate());
         courseRepository.save(c);
 
     }
@@ -61,9 +70,10 @@ public class CourseService implements ICourseService {
         return CourseResponse.builder()
                 .id(c.getCourseId())
                 .title(c.getTitle())
-                .endDate(c.getEndDate())
                 .description(c.getDescription())
-                .startDate(c.getStartDate())
+                .courseTime(c.getCourseTime())
+//                .endDate(c.getEndDate())
+//                .startDate(c.getStartDate())
                 .build();
 
     }
@@ -83,21 +93,23 @@ public class CourseService implements ICourseService {
     public List<CourseResponse> findAll() {
         return courseRepository.findAll().stream().map(a -> CourseResponse.builder()
                 .title(a.getTitle())
-                .endDate(a.getEndDate())
-                .startDate(a.getStartDate())
+                .courseTime(a.getCourseTime())
                 .description(a.getDescription())
                 .id(a.getCourseId())
+//              .endDate(a.getEndDate())
+//              .startDate(a.getStartDate())
                 .build()).collect(Collectors.toList());
     }
 
     @Override
-    public List<CourseResponse> searchCourse(String keyword){
-     return courseRepository.findAllByTitleContainingOrDescriptionContaining(keyword, keyword).stream().map(a -> CourseResponse.builder()
+    public List<CourseResponse> searchCourse(String keyword) {
+        return courseRepository.findAllByTitleContainingOrDescriptionContaining(keyword, keyword).stream().map(a -> CourseResponse.builder()
                 .title(a.getTitle())
-                .endDate(a.getEndDate())
-                .startDate(a.getStartDate())
                 .description(a.getDescription())
                 .id(a.getCourseId())
+                .courseTime(a.getCourseTime())
+//              .endDate(a.getEndDate())
+//              .startDate(a.getStartDate())
                 .build()).collect(Collectors.toList());
     }
 

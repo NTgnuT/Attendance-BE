@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface IClassRepository extends JpaRepository<Class,Long> {
     boolean existsByName(String name);
-    List<Class> findAllByNameContainingOrInstructor_NameContaining(String name,String name1);
+//    List<Class> findAllByNameContainingOrInstructor_NameContaining(String name,String name1);
     List<Class> findAllByNameContaining(String name);
 }

@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InstructorRequest {
+public class TeacherRequest {
     @NotBlank(message = "Không được bỏ trống")
     private String name;
 

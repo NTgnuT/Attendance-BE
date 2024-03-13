@@ -1,27 +1,26 @@
 package com.rikkei.managementuser.service.serviceImpl;
 
-import com.rikkei.managementuser.model.dto.request.InstructorRequest;
-import com.rikkei.managementuser.model.dto.response.InstructorResponse;
-import com.rikkei.managementuser.model.entity.Instructor;
-import com.rikkei.managementuser.repository.IInstructorRepository;
-import com.rikkei.managementuser.service.IInstructorService;
+import com.rikkei.managementuser.model.dto.request.TeacherRequest;
+import com.rikkei.managementuser.model.dto.response.TeacherResponse;
+import com.rikkei.managementuser.model.entity.Teacher;
+import com.rikkei.managementuser.repository.ITeacherRepository;
+import com.rikkei.managementuser.service.ITeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class InstructorService implements IInstructorService {
-    private final IInstructorRepository instructorRepository;
+public class TeacherService implements ITeacherService {
+    private final ITeacherRepository instructorRepository;
 
     @Override
-    public void save(InstructorRequest i) {
-        instructorRepository.save(Instructor.builder()
+    public void save(TeacherRequest i) {
+        instructorRepository.save(Teacher.builder()
                 .address(i.getAddress())
                 .dob(i.getDob())
                 .email(i.getEmail())
@@ -31,9 +30,9 @@ public class InstructorService implements IInstructorService {
     }
 
     @Override
-    public void edit(InstructorRequest i, Long id) {
+    public void edit(TeacherRequest i, Long id) {
         findById(id);
-        Instructor instructor = Instructor.builder()
+        Teacher instructor = Teacher.builder()
                 .phoneNumber(i.getPhoneNumber())
                 .name(i.getName())
                 .address(i.getAddress())
@@ -45,7 +44,7 @@ public class InstructorService implements IInstructorService {
     }
 
     @Override
-    public Instructor findById(Long id) {
+    public Teacher findById(Long id) {
         return instructorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm thấy thông tin giáo viên với ID cung cấp!"));
     }
 
@@ -55,10 +54,10 @@ public class InstructorService implements IInstructorService {
     }
 
     @Override
-    public InstructorResponse instructorDetail(Long id) {
-        Instructor i = findById(id);
-        return InstructorResponse.builder()
-                .instructorId(i.getInstructorId())
+    public TeacherResponse instructorDetail(Long id) {
+        Teacher i = findById(id);
+        return TeacherResponse.builder()
+                .instructorId(i.getTeacherID())
                 .address(i.getAddress())
                 .phoneNumber(i.getPhoneNumber())
                 .email(i.getEmail())
@@ -66,12 +65,12 @@ public class InstructorService implements IInstructorService {
                 .build();
     }
 
-    public Page<InstructorResponse> findAll(Pageable pageable) {
+    public Page<TeacherResponse> findAll(Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), 1, pageable.getSort());
-        Page<Instructor> instructors = instructorRepository.findAll(pageable);
+        Page<Teacher> instructors = instructorRepository.findAll(pageable);
 
-        return instructors.map(a -> InstructorResponse.builder()
-                .instructorId(a.getInstructorId())
+        return instructors.map(a -> TeacherResponse.builder()
+                .instructorId(a.getTeacherID())
                 .name(a.getName())
                 .email(a.getEmail())
                 .address(a.getAddress())

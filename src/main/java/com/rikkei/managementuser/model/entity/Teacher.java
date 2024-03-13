@@ -15,13 +15,13 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Instructors")
+@Table(name = "Teacher")
 @Builder
-public class Instructor {
+public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long instructorId;
+    private Long teacherID;
 
     @Column(name = "Name", nullable = false)
     private String name;
@@ -39,16 +39,16 @@ public class Instructor {
     @Column(name = "DateOfBirth")
     private Date dob;
 
-    @ManyToMany
-    @JoinTable(
-            name = "CoursesInstructors",
-            joinColumns = @JoinColumn(name = "InstructorID"),
-            inverseJoinColumns = @JoinColumn(name = "CourseID")
-    )
-    private Set<Courses> taughtCourses;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "CoursesInstructors",
+//            joinColumns = @JoinColumn(name = "InstructorID"),
+//            inverseJoinColumns = @JoinColumn(name = "CourseID")
+//    )
+//    private Set<Courses> taughtCourses;
 
-    @OneToMany(mappedBy = "instructor")
-    private Set<Class> classes;
+//    @OneToMany(mappedBy = "instructor")
+//    private Set<Class> classes;
 
 
 }

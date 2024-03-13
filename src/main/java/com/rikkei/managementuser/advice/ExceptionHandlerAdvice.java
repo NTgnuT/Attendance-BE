@@ -45,12 +45,11 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(EmailAndPhoneException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handleEmailAndPhoneException(EmailAndPhoneException ex) {
-        Map<String,String> errorDetails = new HashMap<>();
-        errorDetails.put("Email","Email đã tồn tại");
-        errorDetails.put("phone","Số điện thoại đã tồn tại");
-        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST,"Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
+        Map<String, String> errorDetails = new HashMap<>();
+        errorDetails.put("Email", "Email đã tồn tại");
+        errorDetails.put("phone", "Số điện thoại đã tồn tại");
+        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
     }
-
 
 
     @ExceptionHandler(SignInFailException.class)
@@ -98,21 +97,31 @@ public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(PhoneUniqueException.class)
     public ResponseEntity<ErrorResponse> PhoneUniqueException(PhoneUniqueException e) {
-        Map<String,String> errorDetails = new HashMap<>();
-        errorDetails.put("phone","Số điện thoại đã tồn tại");
-        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST,"Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
+        Map<String, String> errorDetails = new HashMap<>();
+        errorDetails.put("phone", "Số điện thoại đã tồn tại");
+        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
     }
 
     @ExceptionHandler(EmailUniqueException.class)
     public ResponseEntity<ErrorResponse> EmailUniqueException(EmailUniqueException e) {
-        Map<String,String> errorDetails = new HashMap<>();
-        errorDetails.put("Email","Email đã tồn tại");
-        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST,"Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
+        Map<String, String> errorDetails = new HashMap<>();
+        errorDetails.put("Email", "Email đã tồn tại");
+        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Dữ liệu không hợp lệ vui lòng kiểm tra lại", errorDetails));
 
     }
 
-
-
+    @ExceptionHandler(CourseExistException.class)
+    public ResponseEntity<?> handleCourseExistException(CourseExistException e) {
+        Map<String, String> errorDetails = new HashMap<>();
+        errorDetails.put("Title", e.getMessage());
+        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST, "Dữ liệu không hợp lệ ", errorDetails));
+    }
+    @ExceptionHandler(ModuleCourseNameException.class)
+    public ResponseEntity<?> handleModuleCourseNameException(ModuleCourseNameException e){
+        Map<String, String> errorDetails = new HashMap<>();
+        errorDetails.put("ModuleName", e.getMessage());
+        return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST,"Đữ liệu không hợp lệ",errorDetails));
+    }
 
 
 }
