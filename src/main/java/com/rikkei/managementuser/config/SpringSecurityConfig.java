@@ -1,4 +1,4 @@
-package com.rikkei.managementuser.config;
+package com.rikkei.managementuser.config.advice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rikkei.managementuser.exception.CustomAccessDeniedHandler;
@@ -32,6 +32,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -80,6 +83,14 @@ public class SpringSecurityConfig {
 //    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOrigins(List.of("http://localhost:5173/", "http://localhost:5174/", "http://localhost:5175/"));
+            configuration.setAllowedMethods(List.of("*"));
+            configuration.setAllowCredentials(true);
+            configuration.setAllowedHeaders(List.of("*"));
+            configuration.setExposedHeaders(List.of("Authorization"));
+            return configuration;
+        }));
         http.csrf(AbstractHttpConfigurer::disable)
 
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtEntryPoint()))
@@ -88,11 +99,10 @@ public class SpringSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ko lưu trạng thái
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/user-management/auth/**").permitAll()
-                                .requestMatchers("/user-management/api n/**").permitAll()
-//                                .requestMatchers("/user-management/api/classes/**").permitAll()
-//                                .requestMatchers(HttpMethod.DELETE,"/user-management/api/classes").hasAnyAuthority("ROLE_ADMIN")
-//                                .requestMatchers(HttpMethod.DELETE, "/user-management/api/courses/**").hasAnyAuthority("ROLE_ADMIN")
-
+                                .requestMatchers("/user-management/api/**").permitAll()
+                                .requestMatchers("/user-management/api/courses/**").permitAll()
+                                .requestMatchers(HttpMethod.DELETE,"/user-management/api/classes").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/user-management/api/courses/**").hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest().authenticated() // các đường dẫn khác yêu cầu xác thực
                 )
 //                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, accessDeniedException) -> {
