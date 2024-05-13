@@ -3,6 +3,7 @@ package com.rikkei.managementuser.model.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.rikkei.managementuser.validator.StudentEmailUnique;
 import com.rikkei.managementuser.validator.StudentPhoneNumberUnique;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,7 @@ public class StudentEditRequest {
 
     @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
     private Date dob;
+
+    @Min(1)
+    private Long classId;
 }

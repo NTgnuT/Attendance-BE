@@ -13,5 +13,5 @@ public class ModuleCourseResponse {
     private Long id;
     private String moduleName;
     private int time;
-    private Long courseId;
+    private String courseName;
 }

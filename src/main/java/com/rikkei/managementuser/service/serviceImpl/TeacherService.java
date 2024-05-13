@@ -11,6 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.NoSuchElementException;
 
 @Service
@@ -20,9 +23,16 @@ public class TeacherService implements ITeacherService {
 
     @Override
     public void save(TeacherRequest i) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
+        try {
+            date = formatter.parse(i.getDob());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         instructorRepository.save(Teacher.builder()
                 .address(i.getAddress())
-                .dob(i.getDob())
+                .dob(date)
                 .email(i.getEmail())
                 .name(i.getName())
                 .phoneNumber(i.getPhoneNumber())
@@ -31,12 +41,19 @@ public class TeacherService implements ITeacherService {
 
     @Override
     public void edit(TeacherRequest i, Long id) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
+        try {
+            date = formatter.parse(i.getDob());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         findById(id);
         Teacher instructor = Teacher.builder()
                 .phoneNumber(i.getPhoneNumber())
                 .name(i.getName())
                 .address(i.getAddress())
-                .dob(i.getDob())
+                .dob(date)
                 .email(i.getEmail())
                 .build();
         instructorRepository.save(instructor);
@@ -57,7 +74,7 @@ public class TeacherService implements ITeacherService {
     public TeacherResponse instructorDetail(Long id) {
         Teacher i = findById(id);
         return TeacherResponse.builder()
-                .instructorId(i.getTeacherID())
+                .instructorId(i.getId())
                 .address(i.getAddress())
                 .phoneNumber(i.getPhoneNumber())
                 .email(i.getEmail())
@@ -70,7 +87,7 @@ public class TeacherService implements ITeacherService {
         Page<Teacher> instructors = instructorRepository.findAll(pageable);
 
         return instructors.map(a -> TeacherResponse.builder()
-                .instructorId(a.getTeacherID())
+                .instructorId(a.getId())
                 .name(a.getName())
                 .email(a.getEmail())
                 .address(a.getAddress())

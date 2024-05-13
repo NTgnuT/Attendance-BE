@@ -1,6 +1,7 @@
 package com.rikkei.managementuser.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -55,5 +57,7 @@ public class Student {
     @JoinColumn(name = "ClassId")
     private Class aClass;
 
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "student")
+    private Set<AttendanceDetail> attendanceDetails;
 }

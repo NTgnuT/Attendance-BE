@@ -2,6 +2,7 @@ package com.rikkei.managementuser.service.serviceImpl;
 
 import com.rikkei.managementuser.exception.NoPermissionToDelete;
 import com.rikkei.managementuser.model.dto.request.ClassCreateDTO;
+import com.rikkei.managementuser.model.dto.request.ClassEditDTO;
 import com.rikkei.managementuser.model.dto.response.ClassResponse;
 import com.rikkei.managementuser.model.entity.Class;
 import com.rikkei.managementuser.repository.IClassRepository;
@@ -28,7 +29,6 @@ public class ClassService implements IClassService {
     @Override
     public void save(ClassCreateDTO c) {
         Class aClass = Class.builder()
-
                 .courses(courseRepository.findById(c.getCoursesId()).orElseThrow(() -> new NoSuchElementException("Không tồn tại khóa học này ")))
                 .maxStudent(c.getMaxStudent())
                 .name(c.getName())
@@ -44,7 +44,7 @@ public class ClassService implements IClassService {
         return ClassResponse.builder()
                 .id(aClass.getId())
                 .maxStudent(aClass.getMaxStudent())
-                .courses(aClass.getCourses().getCourseId())
+                .courses(aClass.getCourses().getId())
                 .startTime(aClass.getStartTime())
                 .name(aClass.getName())
                 .build();
@@ -55,14 +55,14 @@ public class ClassService implements IClassService {
         return classRepository.findAll().stream().map(a -> ClassResponse.builder()
                 .id(a.getId())
                 .name(a.getName())
-                .courses(a.getCourses().getCourseId())
+                .courses(a.getCourses().getId())
                 .startTime(a.getStartTime())
                 .maxStudent(a.getMaxStudent())
                 .build()).collect(Collectors.toList());
     }
 
     @Override
-    public void editClass(ClassCreateDTO a, Long id) {
+    public void editClass(ClassEditDTO a, Long id) {
         Class aClass = classRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Không tồn tại lớp học này "));
         aClass.setName(a.getName());
         aClass.setCourses(courseRepository.findById(a.getCoursesId()).orElseThrow(() -> new NoSuchElementException("Không tồn tại khóa học này ")));
@@ -70,7 +70,6 @@ public class ClassService implements IClassService {
         aClass.setStatus(a.getStatus());
         aClass.setMaxStudent(a.getMaxStudent());
         classRepository.save(aClass);
-
     }
 
     @Override
@@ -90,7 +89,7 @@ public class ClassService implements IClassService {
                 .stream().map(a -> ClassResponse.builder()
                         .id(a.getId())
                         .name(a.getName())
-                        .courses(a.getCourses().getCourseId())
+                        .courses(a.getCourses().getId())
                         .maxStudent(a.getMaxStudent())
                         .startTime(a.getStartTime())
                         .build()).collect(Collectors.toList());

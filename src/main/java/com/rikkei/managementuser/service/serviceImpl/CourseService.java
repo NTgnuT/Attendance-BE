@@ -38,7 +38,7 @@ public class CourseService implements ICourseService {
                 .build();
         courseRepository.save(courses);
         return CourseResponse.builder()
-                .id(courses.getCourseId())
+                .id(courses.getId())
                 .description(courses.getDescription())
                 .title(courses.getTitle())
                 .courseTime(courses.getCourseTime())
@@ -68,7 +68,7 @@ public class CourseService implements ICourseService {
     public CourseResponse findById(Long id) {
         Courses c = courseRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Không tìm được khóa học với id cung cấp"));
         return CourseResponse.builder()
-                .id(c.getCourseId())
+                .id(c.getId())
                 .title(c.getTitle())
                 .description(c.getDescription())
                 .courseTime(c.getCourseTime())
@@ -95,7 +95,7 @@ public class CourseService implements ICourseService {
                 .title(a.getTitle())
                 .courseTime(a.getCourseTime())
                 .description(a.getDescription())
-                .id(a.getCourseId())
+                .id(a.getId())
 //              .endDate(a.getEndDate())
 //              .startDate(a.getStartDate())
                 .build()).collect(Collectors.toList());
@@ -106,7 +106,7 @@ public class CourseService implements ICourseService {
         return courseRepository.findAllByTitleContainingOrDescriptionContaining(keyword, keyword).stream().map(a -> CourseResponse.builder()
                 .title(a.getTitle())
                 .description(a.getDescription())
-                .id(a.getCourseId())
+                .id(a.getId())
                 .courseTime(a.getCourseTime())
 //              .endDate(a.getEndDate())
 //              .startDate(a.getStartDate())

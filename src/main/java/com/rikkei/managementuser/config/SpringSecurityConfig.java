@@ -1,4 +1,4 @@
-package com.rikkei.managementuser.config.advice;
+package com.rikkei.managementuser.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rikkei.managementuser.exception.CustomAccessDeniedHandler;
@@ -83,6 +83,7 @@ public class SpringSecurityConfig {
 //    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.cors(auth -> auth.configurationSource(request -> {
             CorsConfiguration configuration = new CorsConfiguration();
             configuration.setAllowedOrigins(List.of("http://localhost:5173/", "http://localhost:5174/", "http://localhost:5175/"));
             configuration.setAllowedMethods(List.of("*"));

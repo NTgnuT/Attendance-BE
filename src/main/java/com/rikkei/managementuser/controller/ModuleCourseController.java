@@ -3,6 +3,8 @@ package com.rikkei.managementuser.controller;
 import com.rikkei.managementuser.exception.ModuleCourseNameException;
 import com.rikkei.managementuser.model.dto.request.ModuleCourseEditRequest;
 import com.rikkei.managementuser.model.dto.request.ModuleCourseRequest;
+import com.rikkei.managementuser.model.dto.response.CourseResponse;
+import com.rikkei.managementuser.model.dto.response.ModuleCourseResponse;
 import com.rikkei.managementuser.model.dto.response.ResponseAPI;
 import com.rikkei.managementuser.repository.IModuleCourseRepository;
 import com.rikkei.managementuser.service.IModuleCourseService;
@@ -10,6 +12,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user-management/api/module-courses")
@@ -34,5 +38,14 @@ public class ModuleCourseController {
         moduleCourseService.delete(id);
         return ResponseEntity.status(200).body(new ResponseAPI(true, "Đã xóa thành công "));
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findAllByCourseId(@PathVariable Long id) {
+        List<ModuleCourseResponse> mdr = moduleCourseService.findAllByCourseId(id);
+        return ResponseEntity.status(200).body(mdr);
+    }
 
+    @GetMapping("")
+    public ResponseEntity<?> findAllModuleCourse() {
+        return ResponseEntity.status(200).body(moduleCourseService.findAll());
+    }
 }

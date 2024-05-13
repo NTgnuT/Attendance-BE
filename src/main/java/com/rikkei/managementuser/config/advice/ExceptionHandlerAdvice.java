@@ -1,4 +1,4 @@
-package com.rikkei.managementuser.advice;
+package com.rikkei.managementuser.config.advice;
 
 import com.rikkei.managementuser.exception.*;
 import com.rikkei.managementuser.model.dto.ErrorResponse;
@@ -123,5 +123,9 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.status(400).body(new ErrorResponse(HttpStatus.BAD_REQUEST,"Đữ liệu không hợp lệ",errorDetails));
     }
 
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> customException (CustomException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
 }

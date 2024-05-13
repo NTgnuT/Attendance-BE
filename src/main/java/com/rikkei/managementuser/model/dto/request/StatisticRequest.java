@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class StatisticResponse {
+public class StatisticRequest {
     private Long classId;
     private Long moduleId;
 }

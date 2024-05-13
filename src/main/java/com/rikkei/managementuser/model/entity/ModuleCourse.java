@@ -1,11 +1,14 @@
 package com.rikkei.managementuser.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+
+import java.util.Set;
 
 @Entity
 @Data
@@ -21,12 +24,14 @@ public class ModuleCourse {
     @Length(max = 100, min = 6)
     private String moduleName;
 
-    @Column(name = "Time")
-    private int time;
+    @Column(name = "Lesson")
+    private int lesson;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "CourseId")
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
     private Courses course;
 
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "moduleCourse")
+    private Set<Schedule> schedules;
 }

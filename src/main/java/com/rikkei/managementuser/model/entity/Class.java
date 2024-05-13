@@ -1,5 +1,6 @@
 package com.rikkei.managementuser.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,8 +27,8 @@ public class Class {
 
     private int maxStudent;
 
-    @ManyToOne
-    @JoinColumn(name = "CourseId")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
     private Courses courses;
 
     @Column(name = "Status")
@@ -41,10 +42,8 @@ public class Class {
     @OneToMany(mappedBy = "aClass")
     private Set<Student> students;
 
-
-//    @ManyToOne
-//    @JoinColumn(name = "instructorName")
-//    private Teacher teacher;
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "aClass")
+    private Set<Schedule> schedules;
 
 }

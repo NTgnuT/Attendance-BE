@@ -47,4 +47,8 @@ public class StudentController {
             return ResponseEntity.status(500).body("Lỗi xãy ra trong quá trình !");
         }
     }
+    @GetMapping("")
+    public ResponseEntity<?> getAllStudent(){
+        return ResponseEntity.status(200).body(studentService.findAll());
+    }
 }

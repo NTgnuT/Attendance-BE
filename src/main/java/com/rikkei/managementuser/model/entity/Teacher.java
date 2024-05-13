@@ -21,7 +21,7 @@ public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long teacherID;
+    private Long id;
 
     @Column(name = "Name", nullable = false)
     private String name;
@@ -38,6 +38,9 @@ public class Teacher {
     @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
     @Column(name = "DateOfBirth")
     private Date dob;
+
+    @OneToMany(mappedBy = "teacher")
+    private Set<Schedule> schedules;
 
 //    @ManyToMany
 //    @JoinTable(

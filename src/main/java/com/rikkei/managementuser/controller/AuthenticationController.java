@@ -2,9 +2,10 @@ package com.rikkei.managementuser.controller;
 
 import com.rikkei.managementuser.exception.SignInFailException;
 import com.rikkei.managementuser.model.dto.SignIn;
-import com.rikkei.managementuser.model.entity.User;
+import com.rikkei.managementuser.model.dto.request.UserSignUp;
 import com.rikkei.managementuser.repository.IUserRepository;
 import com.rikkei.managementuser.service.AuthenticationService;
+import com.rikkei.managementuser.service.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -15,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,6 +27,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
     private final IUserRepository userRepository;
+    private final IUserService userService;
 
     @PostMapping("/sign-in")
     public ResponseEntity<String> signIn(@Valid @RequestBody SignIn signIn) throws SignInFailException {
@@ -34,10 +35,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<User> singUp(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserSignUp> singUp(@RequestBody UserSignUp userSignUp) {
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        userRepository.save(user);
+        userService.save(userSignUp);
+        return ResponseEntity.ok(userSignUp);
     }
 
     @GetMapping("/log-out")

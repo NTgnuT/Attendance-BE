@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user-management/api")
 @RequiredArgsConstructor
-public class AdminController {
+public class CourseController {
     private final ICourseService courseService;
 
     @PostMapping("/courses")

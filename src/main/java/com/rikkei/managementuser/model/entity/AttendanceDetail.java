@@ -26,5 +26,5 @@ public class AttendanceDetail {
     @Column(name = "attendance_detail_status")
     private AttendanceStatus attendanceStatus;
 
-    private String note;
+//    private String note;
 }

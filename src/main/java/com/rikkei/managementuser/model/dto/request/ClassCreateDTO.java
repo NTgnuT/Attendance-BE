@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -21,13 +22,14 @@ public class ClassCreateDTO {
     @Min(value = 0, message = "số học viên không được âm ")
     private int maxStudent;
 
-    @NotBlank(message = "Không được bỏ trống")
-    private String instructor;
+//    @NotBlank(message = "Không được bỏ trống")
+//    private String instructor;
 
     private Long coursesId;
 
-    private int status;
-
-    private Date startTime;
+//    private int status;
+//
+//    @DateTimeFormat(pattern = "dd/MM/yyyy")
+//    private Date startTime;
 
 }

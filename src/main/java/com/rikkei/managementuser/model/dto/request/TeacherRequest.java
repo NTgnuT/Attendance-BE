@@ -32,5 +32,5 @@ public class TeacherRequest {
     private String address;
 
     @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
-    private Date dob;
+    private String dob;
 }

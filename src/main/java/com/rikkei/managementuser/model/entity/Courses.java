@@ -1,5 +1,6 @@
 package com.rikkei.managementuser.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class Courses {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long courseId;
+    private Long id;
 
     @Column(name = "Title", nullable = false , unique = true)
     private String title;
@@ -31,9 +32,11 @@ public class Courses {
     @Column(name = "CourseTime")
     private int courseTime;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "courses")
     private Set<Class> classes;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
     private Set<ModuleCourse> moduleCourses;
 

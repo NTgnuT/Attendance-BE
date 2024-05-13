@@ -3,6 +3,7 @@ package com.rikkei.managementuser.controller;
 import com.rikkei.managementuser.exception.NoPermissionToDelete;
 import com.rikkei.managementuser.model.dto.ErrorResponse;
 import com.rikkei.managementuser.model.dto.request.ClassCreateDTO;
+import com.rikkei.managementuser.model.dto.request.ClassEditDTO;
 import com.rikkei.managementuser.model.dto.response.ResponseAPI;
 import com.rikkei.managementuser.service.IClassService;
 import jakarta.validation.Valid;
@@ -23,26 +24,25 @@ import java.util.NoSuchElementException;
 public class ClassController {
     private final IClassService classService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> addClass(@Valid @RequestBody ClassCreateDTO classCreateDTO) {
         try {
             classService.save(classCreateDTO);
-            return ResponseEntity.status(201).body(new ResponseAPI(true, "Lớp học đă đăng ký thàng công"));
+            return ResponseEntity.status(201).body(new ResponseAPI(true, "Lớp học đă đăng ký thành công"));
         } catch (HttpServerErrorException.InternalServerError ex) {
             return ResponseEntity.status(500).body(new ResponseAPI(false, "lỗi sever"));
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<?> editClass(@Valid @RequestBody ClassCreateDTO classCreateDTO, @PathVariable Long id) {
-        classService.editClass(classCreateDTO, id);
-        return ResponseEntity.status(201).body(new ResponseAPI(true, "Lớp học đă thay đổi thàng công"));
-
+    public ResponseEntity<?> editClass(@Valid @RequestBody ClassEditDTO classEditDTO, @PathVariable Long id) {
+        classService.editClass(classEditDTO, id);
+        return ResponseEntity.status(201).body(new ResponseAPI(true, "Lớp học đă thay đổi thành công"));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteClass(@PathVariable Long id) throws NoPermissionToDelete {
         classService.deleteClass(id);

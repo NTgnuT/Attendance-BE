@@ -2,6 +2,7 @@ package com.rikkei.managementuser.service;
 
 import com.rikkei.managementuser.exception.NoPermissionToDelete;
 import com.rikkei.managementuser.model.dto.request.ClassCreateDTO;
+import com.rikkei.managementuser.model.dto.request.ClassEditDTO;
 import com.rikkei.managementuser.model.dto.response.ClassResponse;
 import com.rikkei.managementuser.model.entity.Class;
 
@@ -15,7 +16,7 @@ public interface IClassService {
 
     List<ClassResponse> findAllClass();
 
-    void editClass(ClassCreateDTO classCreateDTO,Long id);
+    void editClass(ClassEditDTO classCreateDTO, Long id);
 
     void deleteClass(Long id) throws NoPermissionToDelete;
 

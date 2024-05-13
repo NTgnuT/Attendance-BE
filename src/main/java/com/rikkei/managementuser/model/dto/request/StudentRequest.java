@@ -1,18 +1,14 @@
 package com.rikkei.managementuser.model.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.rikkei.managementuser.validator.EmailUnique;
-import com.rikkei.managementuser.validator.PhoneNumberUnique;
 import com.rikkei.managementuser.validator.StudentEmailUnique;
 import com.rikkei.managementuser.validator.StudentPhoneNumberUnique;
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
 
 @Data
 @NoArgsConstructor
@@ -35,6 +31,9 @@ public class StudentRequest {
     @StudentEmailUnique(message = "Email này đã có học sinh khác sử dụng")
     private String email;
 
-    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
-    private Date dob;
+//    @JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)
+    private String dob;
+
+    @Min(1)
+    private Long classId;
 }

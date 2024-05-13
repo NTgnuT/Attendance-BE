@@ -20,7 +20,7 @@ public class ModuleCourseEditRequest {
 
     @Min(1)
     @NonNull
-    private Integer time;
+    private Integer lesson;
 
     @CourseExist(message = "Không tồn tại khóa học có mã ID này")
     private Long courseId;
