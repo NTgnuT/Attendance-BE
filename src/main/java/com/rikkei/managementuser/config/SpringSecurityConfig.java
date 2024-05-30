@@ -102,6 +102,7 @@ public class SpringSecurityConfig {
                         auth.requestMatchers("/user-management/auth/**").permitAll()
                                 .requestMatchers("/user-management/api/**").permitAll()
                                 .requestMatchers("/user-management/api/courses/**").permitAll()
+                                .requestMatchers("/img/**").permitAll()
                                 .requestMatchers(HttpMethod.DELETE,"/user-management/api/classes").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/user-management/api/courses/**").hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest().authenticated() // các đường dẫn khác yêu cầu xác thực

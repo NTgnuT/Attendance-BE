@@ -35,9 +35,13 @@ public class ScheduleService implements IScheduleService {
     @Override
     public void save(ScheduleRequest scheduleRequest) throws ScheduleException {
         List<Student> students = studentRepository.findByAClass_Id(scheduleRequest.getClassId());
-        Teacher teacher = teacherRepository.findById(scheduleRequest.getTeacherId()).orElseThrow(() -> new NoSuchElementException("Không tồn tại giảng viên này "));
-        Class aClass = classRepository.findById(scheduleRequest.getClassId()).orElseThrow(() -> new NoSuchElementException("Không tồn tại lớp học này "));
-        ModuleCourse moduleCourse = moduleCourseRepository.findById(scheduleRequest.getModuleId()).orElseThrow(() -> new NoSuchElementException("Không tồn tại module học này "));
+        Teacher teacher = teacherRepository.findById(scheduleRequest.getTeacherId())
+                .orElseThrow(() -> new NoSuchElementException("Không tồn tại giảng viên này "));
+        Class aClass = classRepository.findById(scheduleRequest.getClassId())
+                .orElseThrow(() -> new NoSuchElementException("Không tồn tại lớp học này "));
+        ModuleCourse moduleCourse = moduleCourseRepository.findById(scheduleRequest.getModuleId())
+                .orElseThrow(() -> new NoSuchElementException("Không tồn tại module học này "));
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
         try {
@@ -66,9 +70,26 @@ public class ScheduleService implements IScheduleService {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(startDate); // Set ngày bắt đầu
 
+            int lessonCount = 0;
+            // Xử lý ngày đầu tiên
+            if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                Attendance firstAttendance = Attendance.builder()
+                        .schedule(schedule)
+                        .timeAttendance(calendar.getTime())
+                        .build();
+                attendanceRepository.save(firstAttendance);
+                for (Student student : students) {
+                    AttendanceDetail attendanceDetail = AttendanceDetail.builder()
+                            .attendance(firstAttendance)
+                            .student(student)
+                            .build();
+                    attendanceDetailRepository.save(attendanceDetail);
+                }
+                lessonCount++;
+            }
 
-            int lesionCount = 0;
-            while (lesionCount < moduleCourse.getLesson()) {
+            // Vòng lặp cho các ngày tiếp theo
+            while (lessonCount < moduleCourse.getLesson()) {
                 // Tăng ngày
                 calendar.add(Calendar.DATE, 1);
                 Date currentDate = calendar.getTime();
@@ -85,11 +106,10 @@ public class ScheduleService implements IScheduleService {
                         AttendanceDetail attendanceDetail = AttendanceDetail.builder()
                                 .attendance(attendance)
                                 .student(student)
-//                                .attendanceStatus(AttendanceStatus.ABSENCE_WITHOUT_PERMISSION)
                                 .build();
                         attendanceDetailRepository.save(attendanceDetail);
                     }
-                    lesionCount++;
+                    lessonCount++;
                 }
             }
         } else {
@@ -141,14 +161,26 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
-    public void deleteSchedule(Long id) throws NoPermissionToDelete {
-        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-        if (isAdmin) {
-            scheduleRepository.delete(scheduleRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Không tòn tại lịch học này!")));
-        } else {
-            throw new NoPermissionToDelete("Bạn không có quyền xóa lịch học này!");
+    public void deleteSchedule(Long scheduleId) throws NoPermissionToDelete {
+        List<Attendance> attendances = attendanceRepository.findAllBySchedule_Id(scheduleId);
+
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new NoSuchElementException("Không tìm thấy lịch học bạn muốn xóa"));
+
+        for (Attendance attendance : attendances) {
+            List<AttendanceDetail> attendanceDetails = attendanceDetailRepository.findAttendanceDetailByAttendance_Id(attendance.getId());
+            attendanceDetailRepository.deleteAll(attendanceDetails);
+            attendanceRepository.delete(attendance);
         }
+
+        scheduleRepository.delete(schedule);
+
+//        boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+//                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+//        if (isAdmin) {
+//            scheduleRepository.delete(scheduleRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Không tòn tại lịch học này!")));
+//        } else {
+//            throw new NoPermissionToDelete("Bạn không có quyền xóa lịch học này!");
+//        }
     }
 
     @Override

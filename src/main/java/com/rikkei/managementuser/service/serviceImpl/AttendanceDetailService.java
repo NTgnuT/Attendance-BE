@@ -2,12 +2,10 @@ package com.rikkei.managementuser.service.serviceImpl;
 
 import com.rikkei.managementuser.exception.CourseExistException;
 import com.rikkei.managementuser.model.dto.request.AttendanceDetailRequest;
-import com.rikkei.managementuser.model.dto.request.AttendanceRequest;
 import com.rikkei.managementuser.model.dto.request.StatisticRequest;
 import com.rikkei.managementuser.model.dto.response.StatisticResponse;
 import com.rikkei.managementuser.model.entity.*;
 import com.rikkei.managementuser.repository.IAttendanceDetailRepository;
-import com.rikkei.managementuser.repository.IAttendanceRepository;
 import com.rikkei.managementuser.repository.IScheduleRepository;
 import com.rikkei.managementuser.repository.IStudentRepository;
 import com.rikkei.managementuser.service.IAttendanceDetailService;
@@ -78,6 +76,8 @@ public class AttendanceDetailService implements IAttendanceDetailService {
                     default:
                         throw new CourseExistException("Không tồn tại trạng thái này");
                 }
+
+                attendanceDetailRepository.save(attNew);
                 Schedule schedule = scheduleRepository.findById(attDetail.getScheduleId()).orElseThrow(()-> new NoSuchElementException("Không tìm thấy lịch học này"));
 
                 StatisticRequest statisticRequest = new StatisticRequest(schedule.getAClass().getId(), schedule.getModuleCourse().getId());
@@ -90,7 +90,7 @@ public class AttendanceDetailService implements IAttendanceDetailService {
                         }
                     }
                 }
-                attendanceDetailRepository.save(attNew);
+
             }
         }
     }
